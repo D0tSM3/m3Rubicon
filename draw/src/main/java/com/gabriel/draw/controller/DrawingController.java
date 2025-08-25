@@ -2,6 +2,7 @@ package com.gabriel.draw.controller;
 
 import com.gabriel.draw.model.Line;
 import com.gabriel.draw.model.Rectangle;
+import com.gabriel.draw.model.Ellipse;
 import com.gabriel.drawfx.DrawMode;
 import com.gabriel.drawfx.ShapeMode;
 import com.gabriel.draw.view.DrawingView;
@@ -40,7 +41,10 @@ public class DrawingController  implements MouseListener, MouseMotionListener {
                 currentShape = new Line(start, start);
             } else if (appService.getShapeMode() == ShapeMode.Rectangle) {
                 currentShape = new Rectangle(start.x, start.y, 0, 0);
+            } else if (appService.getShapeMode() == ShapeMode.Ellipse) {
+                currentShape = new Ellipse(start.x, start.y, 0, 0);
             }
+
 
             appService.setDrawMode(DrawMode.MousePressed);
             drawingView.repaint();  // repaint to reflect new shape
@@ -66,6 +70,26 @@ public class DrawingController  implements MouseListener, MouseMotionListener {
 
     }
 
+    private void updateShapeBounds(Shape shape, Point start, Point end) {
+        int x = Math.min(start.x, end.x);
+        int y = Math.min(start.y, end.y);
+        int width = Math.abs(end.x - start.x);
+        int height = Math.abs(end.y - start.y);
+
+        if (shape instanceof Rectangle rect) {
+            rect.setX(x);
+            rect.setY(y);
+            rect.setWidth(width);
+            rect.setHeight(height);
+        } else if (shape instanceof Ellipse ellipse) {
+            ellipse.setX(x);
+            ellipse.setY(y);
+            ellipse.setWidth(width);
+            ellipse.setHeight(height);
+        }
+    }
+
+
     @Override
     public void mouseDragged(MouseEvent e) {
         if (appService.getDrawMode() == DrawMode.MousePressed) {
@@ -73,24 +97,16 @@ public class DrawingController  implements MouseListener, MouseMotionListener {
 
             if (appService.getShapeMode() == ShapeMode.Line) {
                 appService.scale(currentShape, end);
-            } else if (appService.getShapeMode() == ShapeMode.Rectangle) {
-                Rectangle rect = (Rectangle) currentShape;
-
-                int x = Math.min(start.x, end.x);
-                int y = Math.min(start.y, end.y);
-
-                rect.setX(x);
-                rect.setY(y);
-
-                int width = Math.abs(end.x - start.x);
-                int height = Math.abs(end.y - start.y);
-
-                rect.setWidth(width);
-                rect.setHeight(height);
+            } else if (appService.getShapeMode() == ShapeMode.Rectangle ||
+                    appService.getShapeMode() == ShapeMode.Ellipse) {
+                updateShapeBounds(currentShape, start, end);
             }
+
             drawingView.repaint(); // repaint on each drag
         }
     }
+
+
 
     @Override
     public void mouseMoved(MouseEvent e) {
