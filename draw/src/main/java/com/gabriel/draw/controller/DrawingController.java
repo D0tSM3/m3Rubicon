@@ -1,6 +1,7 @@
 package com.gabriel.draw.controller;
 
 import com.gabriel.draw.model.Line;
+import com.gabriel.draw.model.Rectangle;
 import com.gabriel.drawfx.DrawMode;
 import com.gabriel.drawfx.ShapeMode;
 import com.gabriel.draw.view.DrawingView;
@@ -12,6 +13,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 public class DrawingController  implements MouseListener, MouseMotionListener {
+    private Point start;
     private Point end;
     final private DrawingView drawingView;
 
@@ -29,32 +31,30 @@ public class DrawingController  implements MouseListener, MouseMotionListener {
     public void mouseClicked(MouseEvent e) {
 
     }
-
     @Override
     public void mousePressed(MouseEvent e) {
-        Point start;
-        if(appService.getDrawMode() == DrawMode.Idle) {
-            if(appService.getShapeMode() == ShapeMode.Line) {
-                start = e.getPoint();
+        if (appService.getDrawMode() == DrawMode.Idle) {
+            start = e.getPoint();
 
-                currentShape = new Line(start,start);
-                currentShape.getRendererService().render(drawingView.getGraphics(), currentShape,false );
-                appService.setDrawMode(DrawMode.MousePressed);
-
+            if (appService.getShapeMode() == ShapeMode.Line) {
+                currentShape = new Line(start, start);
+            } else if (appService.getShapeMode() == ShapeMode.Rectangle) {
+                currentShape = new Rectangle(start.x, start.y, 0, 0);
             }
+
+            appService.setDrawMode(DrawMode.MousePressed);
+            drawingView.repaint();  // repaint to reflect new shape
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-         if(appService.getDrawMode() == DrawMode.MousePressed){
-             if(appService.getShapeMode() == ShapeMode.Line) {
-                 end = e.getPoint();
-                 appService.create(currentShape);
-                 appService.setDrawMode(DrawMode.Idle);
-             }
-         }
+        if (appService.getDrawMode() == DrawMode.MousePressed) {
+            appService.create(currentShape);
+            appService.setDrawMode(DrawMode.Idle);
+        }
     }
+
 
     @Override
     public void mouseEntered(MouseEvent e) {
@@ -68,13 +68,27 @@ public class DrawingController  implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if(appService.getDrawMode() == DrawMode.MousePressed) {
+        if (appService.getDrawMode() == DrawMode.MousePressed) {
+            Point end = e.getPoint();
+
             if (appService.getShapeMode() == ShapeMode.Line) {
-                end = e.getPoint();
-                currentShape.getRendererService().render(drawingView.getGraphics(), currentShape,true );
-                appService.scale(currentShape,end);
-                currentShape.getRendererService().render(drawingView.getGraphics(), currentShape,true );
+                appService.scale(currentShape, end);
+            } else if (appService.getShapeMode() == ShapeMode.Rectangle) {
+                Rectangle rect = (Rectangle) currentShape;
+
+                int x = Math.min(start.x, end.x);
+                int y = Math.min(start.y, end.y);
+
+                rect.setX(x);
+                rect.setY(y);
+
+                int width = Math.abs(end.x - start.x);
+                int height = Math.abs(end.y - start.y);
+
+                rect.setWidth(width);
+                rect.setHeight(height);
             }
+            drawingView.repaint(); // repaint on each drag
         }
     }
 
