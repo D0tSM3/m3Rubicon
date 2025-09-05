@@ -17,4 +17,40 @@ public abstract class Shape {
         this.setEnd(location);
   }
 
+  // ...existing code...
+
+  public void setEnd(Point point) {
+      this.end = point;
+  }
+
+  public Point getEnd() {
+      return this.end;
+  }
+
+  // ...existing code...
+
+  // ...existing code...
+
+  public void setLocation(Point point) {
+      this.location = point;
+  }
+
+  public Point getLocation() {
+      return this.location;
+  }
+
+  // ...existing code...
+  // ...existing code...
+
+  public void setRendererService(RendererService rendererService) {
+      this.rendererService = rendererService;
+  }
+
+  public RendererService getRendererService() {
+      return this.rendererService;
+  }
+
+  // ...existing code...
+  
+
 }

@@ -18,12 +18,22 @@ public class DrawingAppService implements AppService {
     MoverService moverService;
     ScalerService scalerService;
     JPanel drawingView;
+    private Shape selectedShape;
+
     public DrawingAppService(){
         drawing = new Drawing();
         moverService = new MoverService();
         scalerService = new ScalerService();
         drawing.setDrawMode(DrawMode.Idle);
         drawing.setShapeMode(ShapeMode.Ellipse);
+    }
+    @Override
+    public Shape getSelectedShape() {
+        return selectedShape;
+    }
+
+    public void setSelectedShape(Shape shape) {
+        this.selectedShape = shape;
     }
 
     @Override

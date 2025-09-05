@@ -1,6 +1,7 @@
 package com.gabriel.draw.service;
 
 import com.gabriel.draw.command.AddShapeCommand;
+import com.gabriel.draw.command.DeleteShapeCommand;
 import com.gabriel.drawfx.DrawMode;
 import com.gabriel.drawfx.ShapeMode;
 import com.gabriel.drawfx.command.Command;
@@ -85,10 +86,15 @@ public class DeawingCommandAppService implements AppService {
         Command command = new AddShapeCommand(appService, shape);
         CommandService.ExecuteCommand(command);
     }
-
     @Override
+    public Shape getSelectedShape() {
+        return appService.getSelectedShape();
+    }
+    
+    //for delete shape command
     public void delete(Shape shape) {
-        appService.delete(shape);
+        Command command = new com.gabriel.draw.command.DeleteShapeCommand(appService, shape);
+        com.gabriel.drawfx.command.CommandService.ExecuteCommand(command);
     }
 
     @Override

@@ -18,6 +18,8 @@ public class DrawingMenuBar extends JMenuBar implements ActionListener {
 
     private final JMenuItem undoMenuItem = new JMenuItem("Umdo");
     private final JMenuItem redoMenuItem = new JMenuItem("Redo");
+    private final JMenuItem deleteMenuItem = new JMenuItem("Delete");
+
 
 
     public DrawingMenuBar(AppService appService ){
@@ -26,12 +28,19 @@ public class DrawingMenuBar extends JMenuBar implements ActionListener {
         JMenu editMenu = new JMenu("Edit");
         editMenu.setMnemonic(KeyEvent.VK_E);
         add(editMenu);
+
         undoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK));
         undoMenuItem.addActionListener(this);
         editMenu.add(undoMenuItem);
+
         redoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));;
         redoMenuItem.addActionListener(this);
         editMenu.add(redoMenuItem);
+
+        // Add Delete menu item
+        deleteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+        deleteMenuItem.addActionListener(this);
+        editMenu.add(deleteMenuItem);
 
         JMenu drawMenu = new JMenu("Draw");
         drawMenu.setMnemonic(KeyEvent.VK_D);
@@ -52,6 +61,9 @@ public class DrawingMenuBar extends JMenuBar implements ActionListener {
         }
         if(e.getSource() == redoMenuItem) {
             appService.redo();
+        }
+        else if(e.getSource() == deleteMenuItem) {
+        appService.delete(appService.getSelectedShape());
         }
         else if(e.getSource() == lineMenuItem){
             appService.setShapeMode( ShapeMode.Line);

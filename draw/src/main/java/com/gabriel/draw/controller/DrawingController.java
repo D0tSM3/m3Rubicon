@@ -60,6 +60,14 @@ public class DrawingController  implements MouseListener, MouseMotionListener {
            }
     }
 
+    public void deleteSelectedShape() {
+    Shape selectedShape = appService.getSelectedShape(); // You need a way to get the selected shape
+    if (selectedShape != null) {
+        appService.delete(selectedShape);
+        appService.repaint();
+    }
+}
+
     @Override
     public void mouseEntered(MouseEvent e) {
 

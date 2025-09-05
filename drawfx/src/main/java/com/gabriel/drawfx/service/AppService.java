@@ -11,6 +11,8 @@ public interface AppService {
     void undo();
     void redo();
 
+    Shape getSelectedShape();
+
     ShapeMode getShapeMode();
     void setShapeMode(ShapeMode shapeMode);
 
