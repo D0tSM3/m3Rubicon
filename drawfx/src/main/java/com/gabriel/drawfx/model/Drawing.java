@@ -7,6 +7,7 @@ import lombok.Data;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+
 @Data
 public class Drawing {
 
@@ -14,8 +15,11 @@ public class Drawing {
     private Color fill;
     private ShapeMode shapeMode = ShapeMode.Rectangle;
     private DrawMode drawMode = DrawMode.Idle;
-    List<Shape> shapes;
-    public Drawing(){
+
+    // Declare shapes as private to have Lombok generate getter
+    private List<Shape> shapes;
+
+    public Drawing() {
         shapes = new ArrayList<>();
     }
 }

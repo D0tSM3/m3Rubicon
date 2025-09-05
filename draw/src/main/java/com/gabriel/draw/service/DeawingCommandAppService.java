@@ -6,6 +6,7 @@ import com.gabriel.drawfx.DrawMode;
 import com.gabriel.drawfx.ShapeMode;
 import com.gabriel.drawfx.command.Command;
 import com.gabriel.drawfx.command.CommandService;
+import com.gabriel.drawfx.model.Drawing;
 import com.gabriel.drawfx.model.Shape;
 import com.gabriel.drawfx.service.AppService;
 
@@ -103,9 +104,10 @@ public class DeawingCommandAppService implements AppService {
     }
 
     @Override
-    public Object getModel() {
+    public Drawing getModel() {
         return appService.getModel();
     }
+
 
     @Override
     public JPanel getView() {
@@ -121,4 +123,10 @@ public class DeawingCommandAppService implements AppService {
     public void repaint() {
         appService.repaint();
     }
+
+    @Override
+    public void setSelectedShape(Shape shape) {
+        appService.setSelectedShape(shape);
+    }
+
 }

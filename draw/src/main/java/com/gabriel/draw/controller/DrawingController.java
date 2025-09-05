@@ -8,88 +8,108 @@ import com.gabriel.drawfx.ShapeMode;
 import com.gabriel.draw.view.DrawingView;
 import com.gabriel.drawfx.service.AppService;
 import com.gabriel.drawfx.model.Shape;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.Ellipse2D;
 
-public class DrawingController  implements MouseListener, MouseMotionListener {
+public class DrawingController implements MouseListener, MouseMotionListener {
     private Point end;
-    final private DrawingView drawingView;
+    private final DrawingView drawingView;
 
-    Shape currentShape;
-    AppService appService;
-     public DrawingController(AppService appService, DrawingView drawingView){
-       this.appService = appService;
-         this.drawingView = drawingView;
-         drawingView.addMouseListener(this);
-         drawingView.addMouseMotionListener(this);
-     }
+    private Shape currentShape;
+    private AppService appService;
+
+    public DrawingController(AppService appService, DrawingView drawingView){
+        this.appService = appService;
+        this.drawingView = drawingView;
+
+        drawingView.addMouseListener(this);
+        drawingView.addMouseMotionListener(this);
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
+        Point clickPoint = e.getPoint();
 
+        // Fetch shapes from your model
+        for (Shape shape : appService.getModel().getShapes()) {
+            if (shape.getBounds().contains(clickPoint)) {
+                appService.setSelectedShape(shape);
+
+                // Request UI repaint to show the selection
+                appService.repaint();
+                break;
+            }
+        }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        Point start;
-        if(appService.getDrawMode() == DrawMode.Idle) {
-            start = e.getPoint();
+        if (appService.getDrawMode() == DrawMode.Idle) {
+            Point start = e.getPoint();
+
             switch (appService.getShapeMode()){
-                case Line:  currentShape = new Line(start, start);
+                case Line:
+                    currentShape = new Line(start, start);
                     break;
                 case Rectangle:
                     currentShape = new Rectangle(start, start);
                     break;
-                case  Ellipse:
+                case Ellipse:
                     currentShape = new Ellipse(start, start);
                     break;
             }
-            currentShape.getRendererService().render(drawingView.getGraphics(), currentShape,false );
+
+            // Render initial shape preview
+            currentShape.getRendererService().render(drawingView.getGraphics(), currentShape, false);
             appService.setDrawMode(DrawMode.MousePressed);
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-         if(appService.getDrawMode() == DrawMode.MousePressed){
-             end = e.getPoint();
-             appService.create(currentShape);
-             appService.setDrawMode(DrawMode.Idle);
-           }
-    }
+        if (appService.getDrawMode() == DrawMode.MousePressed){
+            end = e.getPoint();
 
-    public void deleteSelectedShape() {
-    Shape selectedShape = appService.getSelectedShape(); // You need a way to get the selected shape
-    if (selectedShape != null) {
-        appService.delete(selectedShape);
-        appService.repaint();
-    }
-}
+            // Finalize creation of the shape via the service
+            appService.create(currentShape);
 
-    @Override
-    public void mouseEntered(MouseEvent e) {
+            // Reset draw mode
+            appService.setDrawMode(DrawMode.Idle);
 
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
+            // Refresh the UI to show the new shape
+            appService.repaint();
+        }
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if(appService.getDrawMode() == DrawMode.MousePressed) {
-                end = e.getPoint();
-                currentShape.getRendererService().render(drawingView.getGraphics(), currentShape,true );
-                appService.scale(currentShape,end);
-                currentShape.getRendererService().render(drawingView.getGraphics(), currentShape,true );
-           }
+        if (appService.getDrawMode() == DrawMode.MousePressed) {
+            end = e.getPoint();
+
+            // Render shape dynamically as mouse is dragged
+            currentShape.getRendererService().render(drawingView.getGraphics(), currentShape, true );
+
+            appService.scale(currentShape, end);
+
+            currentShape.getRendererService().render(drawingView.getGraphics(), currentShape, true );
+
+            appService.repaint();
+        }
     }
 
-    @Override
-    public void mouseMoved(MouseEvent e) {
-
+    public void deleteSelectedShape() {
+        Shape selectedShape = appService.getSelectedShape();
+        if (selectedShape != null) {
+            appService.delete(selectedShape);
+            appService.repaint();
+        }
     }
+
+    // Unused event methods - implement if needed or leave empty
+    @Override public void mouseEntered(MouseEvent e) {}
+    @Override public void mouseExited(MouseEvent e) {}
+    @Override public void mouseMoved(MouseEvent e) {}
 }

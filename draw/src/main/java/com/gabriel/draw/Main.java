@@ -1,39 +1,46 @@
 package com.gabriel.draw;
 
 import com.gabriel.draw.component.DrawingMenuBar;
-import com.gabriel.draw.controller.DrawingWindowController;
+import com.gabriel.draw.controller.DrawingController;
 import com.gabriel.draw.service.DeawingCommandAppService;
 import com.gabriel.draw.service.DrawingAppService;
-import com.gabriel.draw.controller.DrawingController;
 import com.gabriel.draw.view.DrawingView;
 import com.gabriel.draw.view.DrawingFrame;
-import com.gabriel.drawfx.model.Drawing;
 import com.gabriel.drawfx.service.AppService;
+import com.gabriel.drawfx.service.AppServiceImpl;
 
 import javax.swing.*;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        AppService drawingAppService = new DrawingAppService();
-        AppService appService = new DeawingCommandAppService(drawingAppService);
+        // Choose which AppService implementation to use
+        // Using AppServiceImpl here, but can change to DrawingAppService or DeawingCommandAppService if needed
+        AppService appService = new AppServiceImpl();
 
+        // Create view
+        DrawingView drawingView = new DrawingView(appService);
+
+        // Create controller with the AppService and DrawingView (2-arg constructor)
+        DrawingController drawingController = new DrawingController(appService, drawingView);
+
+        // Register mouse listeners on the view
+        drawingView.addMouseMotionListener(drawingController);
+        drawingView.addMouseListener(drawingController);
+
+        // Create frame and menu bar with the same AppService instance
         DrawingFrame drawingFrame = new DrawingFrame(appService);
         DrawingMenuBar drawingMenuBar = new DrawingMenuBar(appService);
 
-        DrawingView drawingView = new DrawingView(appService);
-        DrawingController drawingController = new DrawingController(appService, drawingView);
-        drawingView.addMouseMotionListener(drawingController);
-        drawingView.addMouseListener(drawingController);
+        // Add the drawing view to the frame
         drawingFrame.add(drawingView);
 
-
-        drawingMenuBar.setVisible(true);
+        // Set up menu bar and make it visible
         drawingFrame.setJMenuBar(drawingMenuBar);
+        drawingMenuBar.setVisible(true);
 
-        drawingFrame.setVisible(true);
+        // Final frame setup
+        drawingFrame.setSize(500, 500);
         drawingFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        drawingFrame.setSize(500,500);
+        drawingFrame.setVisible(true);
     }
 }

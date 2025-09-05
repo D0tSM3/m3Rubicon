@@ -3,10 +3,14 @@ package com.gabriel.draw.model;
 
 import com.gabriel.draw.service.LineRendererService;
 import lombok.Data;
+
 import com.gabriel.drawfx.model.Shape;
+import lombok.EqualsAndHashCode;
+
 import java.awt.*;
 
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class Line extends Shape {
 
@@ -16,4 +20,13 @@ public class Line extends Shape {
         this.setColor(Color.RED);
         this.setRendererService(new LineRendererService());
     }
+    @Override
+    public java.awt.Rectangle getBounds() {
+        int x = Math.min(getLocation().x, getEnd().x);
+        int y = Math.min(getLocation().y, getEnd().y);
+        int width = Math.abs(getEnd().x - getLocation().x);
+        int height = Math.abs(getEnd().y - getLocation().y);
+        return new java.awt.Rectangle(x, y, width, height);
+    }
+
 }

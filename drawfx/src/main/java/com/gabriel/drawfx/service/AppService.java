@@ -2,6 +2,7 @@ package com.gabriel.drawfx.service;
 
 import com.gabriel.drawfx.DrawMode;
 import com.gabriel.drawfx.ShapeMode;
+import com.gabriel.drawfx.model.Drawing;
 import com.gabriel.drawfx.model.Shape;
 
 import javax.swing.*;
@@ -12,6 +13,7 @@ public interface AppService {
     void redo();
 
     Shape getSelectedShape();
+    void setSelectedShape(Shape shape);  // Add this if not present
 
     ShapeMode getShapeMode();
     void setShapeMode(ShapeMode shapeMode);
@@ -33,7 +35,8 @@ public interface AppService {
 
     void close();
 
-    Object getModel();
+    Drawing getModel();  // Use concrete type here, not Object
+
     JPanel getView();
     void setView(JPanel panel);
     void repaint();

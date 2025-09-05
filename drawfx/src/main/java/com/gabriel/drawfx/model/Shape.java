@@ -2,9 +2,12 @@ package com.gabriel.drawfx.model;
 
 import com.gabriel.drawfx.service.RendererService;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 import java.awt.*;
 @Data
+@NoArgsConstructor
 public abstract class Shape {
     int id;
     private Point location;
@@ -17,7 +20,7 @@ public abstract class Shape {
         this.setEnd(location);
   }
 
-  // ...existing code...
+  public abstract java.awt.Rectangle getBounds();
 
   public void setEnd(Point point) {
       this.end = point;
@@ -27,10 +30,6 @@ public abstract class Shape {
       return this.end;
   }
 
-  // ...existing code...
-
-  // ...existing code...
-
   public void setLocation(Point point) {
       this.location = point;
   }
@@ -39,7 +38,6 @@ public abstract class Shape {
       return this.location;
   }
 
-  // ...existing code...
   // ...existing code...
 
   public void setRendererService(RendererService rendererService) {

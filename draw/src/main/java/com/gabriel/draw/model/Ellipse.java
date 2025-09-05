@@ -13,4 +13,13 @@ public class Ellipse extends Shape {
         this.setColor(Color.RED);
         this.setRendererService(new EllipseRenderer());
     }
- }
+    @Override
+    public java.awt.Rectangle getBounds() {
+        int x = Math.min(getLocation().x, getEnd().x);
+        int y = Math.min(getLocation().y, getEnd().y);
+        int width = Math.abs(getEnd().x - getLocation().x);
+        int height = Math.abs(getEnd().y - getLocation().y);
+        return new java.awt.Rectangle(x, y, width, height);
+    }
+
+}

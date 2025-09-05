@@ -14,7 +14,7 @@ import java.awt.*;
 
 public class DrawingAppService implements AppService {
 
-    final private Drawing drawing;;
+    final private Drawing drawing;
     MoverService moverService;
     ScalerService scalerService;
     JPanel drawingView;
@@ -112,11 +112,6 @@ public class DrawingAppService implements AppService {
     }
 
     @Override
-    public Object getModel() {
-        return drawing;
-    }
-
-    @Override
     public JPanel getView() {
         return drawingView;
     }
@@ -130,4 +125,10 @@ public class DrawingAppService implements AppService {
     public void repaint() {
         drawingView.repaint();
     }
+
+    @Override
+    public Drawing getModel() {
+        return drawing;
+    }
+
 }
