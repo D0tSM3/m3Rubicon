@@ -36,6 +36,9 @@ public interface AppService {
     void close();
 
     Drawing getModel();  // Use concrete type here, not Object
+    void moveShape(Shape shape, Point oldLocation, Point oldEnd, Point newLocation, Point newEnd);
+
+
 
     JPanel getView();
     void setView(JPanel panel);

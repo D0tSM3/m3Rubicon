@@ -19,6 +19,8 @@ public class DrawingMenuBar extends JMenuBar implements ActionListener {
     private final JMenuItem undoMenuItem = new JMenuItem("Umdo");
     private final JMenuItem redoMenuItem = new JMenuItem("Redo");
     private final JMenuItem deleteMenuItem = new JMenuItem("Delete");
+    private final JMenuItem moveMenuItem = new JMenuItem("Move");
+
 
 
 
@@ -41,6 +43,10 @@ public class DrawingMenuBar extends JMenuBar implements ActionListener {
         deleteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
         deleteMenuItem.addActionListener(this);
         editMenu.add(deleteMenuItem);
+
+        // Move it
+        editMenu.add(moveMenuItem);
+        moveMenuItem.addActionListener(this);
 
         JMenu drawMenu = new JMenu("Draw");
         drawMenu.setMnemonic(KeyEvent.VK_D);

@@ -2,6 +2,7 @@ package com.gabriel.draw.service;
 
 import com.gabriel.draw.command.AddShapeCommand;
 import com.gabriel.draw.command.DeleteShapeCommand;
+import com.gabriel.draw.command.MoveShapeCommand;
 import com.gabriel.drawfx.DrawMode;
 import com.gabriel.drawfx.ShapeMode;
 import com.gabriel.drawfx.command.Command;
@@ -128,5 +129,10 @@ public class DeawingCommandAppService implements AppService {
     public void setSelectedShape(Shape shape) {
         appService.setSelectedShape(shape);
     }
+    public void moveShape(Shape shape, Point oldLocation, Point oldEnd, Point newLocation, Point newEnd) {
+        Command moveCommand = new MoveShapeCommand(this.appService, shape, oldLocation, oldEnd, newLocation, newEnd);
+        CommandService.ExecuteCommand(moveCommand);
+    }
+
 
 }

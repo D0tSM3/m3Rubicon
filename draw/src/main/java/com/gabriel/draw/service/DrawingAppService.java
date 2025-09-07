@@ -130,5 +130,13 @@ public class DrawingAppService implements AppService {
     public Drawing getModel() {
         return drawing;
     }
+    @Override
+    public void moveShape(Shape shape, Point oldLocation, Point oldEnd, Point newLocation, Point newEnd) {
+        if (shape != null) {
+            shape.setLocation(newLocation);
+            shape.setEnd(newEnd);
+        }
+    }
+
 
 }

@@ -98,6 +98,15 @@ public class AppServiceImpl implements AppService {
     }
 
     @Override
+    public void moveShape(Shape shape, Point oldLocation, Point oldEnd, Point newLocation, Point newEnd) {
+        if (shape != null) {
+            shape.setLocation(newLocation);
+            shape.setEnd(newEnd);
+        }
+    }
+
+
+    @Override
     public void close() {
         // TODO: implement resource cleanup if needed
     }
@@ -106,6 +115,7 @@ public class AppServiceImpl implements AppService {
     public Drawing getModel() {
         return model;
     }
+    
 
     @Override
     public JPanel getView() {
