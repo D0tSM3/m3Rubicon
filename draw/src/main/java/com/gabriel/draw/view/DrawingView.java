@@ -36,13 +36,9 @@ public class DrawingView extends JPanel {
                 // Save the original stroke
                 Stroke originalStroke = g2d.getStroke();
 
-                g2d.setColor(Color.BLUE);
-                g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{5}, 0));
                 Rectangle2D bounds = shape.getBounds();
-                g2d.drawRect((int)bounds.getX() - 2, (int)bounds.getY() - 2,
-                        (int)bounds.getWidth() + 4, (int)bounds.getHeight() + 4);
-
-                // Draw resize handles
+                
+                // Draw resize handles only (no border)
                 drawResizeHandles(g2d, bounds);
 
                 // Restore the original stroke

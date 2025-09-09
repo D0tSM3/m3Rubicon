@@ -3,6 +3,7 @@ package com.gabriel.draw.component;
 import com.gabriel.drawfx.ShapeMode;
 import com.gabriel.drawfx.service.AppService;
 import com.gabriel.drawfx.model.Shape;
+import com.gabriel.draw.command.FillColorShapeCommand;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,8 +22,10 @@ public class DrawingMenuBar extends JMenuBar implements ActionListener {
     private final JMenuItem undoMenuItem = new JMenuItem("Undo");
     private final JMenuItem redoMenuItem = new JMenuItem("Redo");
     private final JMenuItem deleteMenuItem = new JMenuItem("Delete");
-    private final JMenuItem colorMenuItem = new JMenuItem("Color");
-    private final JMenuItem fillColorMenuItem = new JMenuItem("Fill Color");
+    
+    private final JMenuItem redFillMenuItem = new JMenuItem("Red");
+    private final JMenuItem greenFillMenuItem = new JMenuItem("Green");
+    private final JMenuItem blueFillMenuItem = new JMenuItem("Blue");
 
     public DrawingMenuBar(AppService appService ){
         super();
@@ -36,9 +39,19 @@ public class DrawingMenuBar extends JMenuBar implements ActionListener {
         redoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));;
         redoMenuItem.addActionListener(this);
         editMenu.add(redoMenuItem);
-        deleteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+        deleteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0));
         deleteMenuItem.addActionListener(this);
         editMenu.add(deleteMenuItem);
+        
+        JMenu fillColorMenu = new JMenu("Fill Color");
+        fillColorMenu.setMnemonic(KeyEvent.VK_F);
+        redFillMenuItem.addActionListener(this);
+        greenFillMenuItem.addActionListener(this);
+        blueFillMenuItem.addActionListener(this);
+        fillColorMenu.add(redFillMenuItem);
+        fillColorMenu.add(greenFillMenuItem);
+        fillColorMenu.add(blueFillMenuItem);
+        editMenu.add(fillColorMenu);
 
         JMenu drawMenu = new JMenu("Draw");
         drawMenu.setMnemonic(KeyEvent.VK_D);
@@ -50,14 +63,6 @@ public class DrawingMenuBar extends JMenuBar implements ActionListener {
         drawMenu.add(ellipseMenuItem);
         ellipseMenuItem.addActionListener(this);
 
-        JMenu propMenu = new JMenu("Properties");
-        propMenu.setMnemonic(KeyEvent.VK_P);
-        propMenu.add(colorMenuItem);
-        this.add(propMenu);
-        colorMenuItem.addActionListener(this);
-        propMenu.add(fillColorMenuItem);
-        fillColorMenuItem.addActionListener(this);
-        this.add(propMenu);
     }
 
     @Override
@@ -87,14 +92,31 @@ public class DrawingMenuBar extends JMenuBar implements ActionListener {
         else if(e.getSource() == ellipseMenuItem) {
             appService.setShapeMode(ShapeMode.Ellipse);
         }
-        else if(e.getSource() == colorMenuItem) {
-            Color selectedColor = JColorChooser.showDialog(null, "Choose a color", appService.getColor());
-            appService.setColor(selectedColor);
+        else if(e.getSource() == redFillMenuItem) {
+            Color redColor = Color.RED;
+            if (appService.getSelectedShape() != null) {
+                FillColorShapeCommand fillCommand = new FillColorShapeCommand(appService, redColor);
+                fillCommand.execute();
+            } else {
+                appService.setFill(redColor);
+            }
         }
-        else if(e.getSource() == fillColorMenuItem) {
-            Color selectedFillColor = JColorChooser.showDialog(null, "Choose fill color", appService.getFill());
-            if (selectedFillColor != null) {
-                appService.setFill(selectedFillColor);
+        else if(e.getSource() == greenFillMenuItem) {
+            Color greenColor = Color.GREEN;
+            if (appService.getSelectedShape() != null) {
+                FillColorShapeCommand fillCommand = new FillColorShapeCommand(appService, greenColor);
+                fillCommand.execute();
+            } else {
+                appService.setFill(greenColor);
+            }
+        }
+        else if(e.getSource() == blueFillMenuItem) {
+            Color blueColor = Color.BLUE;
+            if (appService.getSelectedShape() != null) {
+                FillColorShapeCommand fillCommand = new FillColorShapeCommand(appService, blueColor);
+                fillCommand.execute();
+            } else {
+                appService.setFill(blueColor);
             }
         }
     }
