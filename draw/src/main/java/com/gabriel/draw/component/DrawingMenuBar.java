@@ -2,8 +2,10 @@ package com.gabriel.draw.component;
 
 import com.gabriel.drawfx.ShapeMode;
 import com.gabriel.drawfx.service.AppService;
+import com.gabriel.drawfx.model.Shape;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -16,9 +18,11 @@ public class DrawingMenuBar extends JMenuBar implements ActionListener {
     private final JMenuItem rectangleMenuItem = new JMenuItem("Rectangle");
     private final JMenuItem ellipseMenuItem = new JMenuItem("Ellipse");
 
-    private final JMenuItem undoMenuItem = new JMenuItem("Umdo");
+    private final JMenuItem undoMenuItem = new JMenuItem("Undo");
     private final JMenuItem redoMenuItem = new JMenuItem("Redo");
-
+    private final JMenuItem deleteMenuItem = new JMenuItem("Delete");
+    private final JMenuItem colorMenuItem = new JMenuItem("Color");
+    private final JMenuItem fillColorMenuItem = new JMenuItem("Fill Color");
 
     public DrawingMenuBar(AppService appService ){
         super();
@@ -32,6 +36,9 @@ public class DrawingMenuBar extends JMenuBar implements ActionListener {
         redoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));;
         redoMenuItem.addActionListener(this);
         editMenu.add(redoMenuItem);
+        deleteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+        deleteMenuItem.addActionListener(this);
+        editMenu.add(deleteMenuItem);
 
         JMenu drawMenu = new JMenu("Draw");
         drawMenu.setMnemonic(KeyEvent.VK_D);
@@ -42,6 +49,15 @@ public class DrawingMenuBar extends JMenuBar implements ActionListener {
         rectangleMenuItem.addActionListener(this);
         drawMenu.add(ellipseMenuItem);
         ellipseMenuItem.addActionListener(this);
+
+        JMenu propMenu = new JMenu("Properties");
+        propMenu.setMnemonic(KeyEvent.VK_P);
+        propMenu.add(colorMenuItem);
+        this.add(propMenu);
+        colorMenuItem.addActionListener(this);
+        propMenu.add(fillColorMenuItem);
+        fillColorMenuItem.addActionListener(this);
+        this.add(propMenu);
     }
 
     @Override
@@ -50,8 +66,17 @@ public class DrawingMenuBar extends JMenuBar implements ActionListener {
         if(e.getSource() == undoMenuItem) {
             appService.undo();
         }
-        if(e.getSource() == redoMenuItem) {
+        else if(e.getSource() == redoMenuItem) {
             appService.redo();
+        }
+        else if(e.getSource() == deleteMenuItem) {
+            // Wait lang ha
+            Shape selectedShape = appService.getSelectedShape();
+            if (selectedShape != null) {
+                appService.delete(selectedShape);
+                appService.clearSelection();
+                appService.repaint();
+            }
         }
         else if(e.getSource() == lineMenuItem){
             appService.setShapeMode( ShapeMode.Line);
@@ -59,8 +84,18 @@ public class DrawingMenuBar extends JMenuBar implements ActionListener {
         else if(e.getSource() == rectangleMenuItem){
             appService.setShapeMode( ShapeMode.Rectangle);
         }
-        else if(e.getSource() == ellipseMenuItem){
-            appService.setShapeMode( ShapeMode.Ellipse);
+        else if(e.getSource() == ellipseMenuItem) {
+            appService.setShapeMode(ShapeMode.Ellipse);
+        }
+        else if(e.getSource() == colorMenuItem) {
+            Color selectedColor = JColorChooser.showDialog(null, "Choose a color", appService.getColor());
+            appService.setColor(selectedColor);
+        }
+        else if(e.getSource() == fillColorMenuItem) {
+            Color selectedFillColor = JColorChooser.showDialog(null, "Choose fill color", appService.getFill());
+            if (selectedFillColor != null) {
+                appService.setFill(selectedFillColor);
+            }
         }
     }
 }

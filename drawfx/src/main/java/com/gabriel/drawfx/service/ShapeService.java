@@ -12,4 +12,3 @@ public interface ShapeService {
     List<Shape> getAll();
     Shape get(Shape shape);
 }
-
